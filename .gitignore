@@ -26,3 +26,17 @@
 *.exe
 *.out
 *.app
+
+#build directory
+build/*
+build_mingw/*
+build_clang/*
+build_vs/*
+
+# vim
+*~
+*.swp
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+*.taghl
+tags
