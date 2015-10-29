@@ -1,6 +1,5 @@
 
 #include <MiT/Parser/Parser.hpp>
-#include <iostream>
 
 namespace Parser
 {
@@ -47,14 +46,14 @@ namespace Parser
     }
   }
 
-  void Abstract_Parser::open_files()
+  void Abstract_Parser::open_files(std::ios_base::openmode op)
   {
     std::string filename;
     _fps.clear();
     for (unsigned int i = 0; i < _filenames.size(); ++i) {
       filename = _data_directory + _filenames[i];
       std::shared_ptr<std::fstream> fp(new std::fstream);
-      fp->open(filename.c_str(), std::ios_base::in);
+      fp->open(filename.c_str(), op);
       _fps.push_back(fp);
       if(!_fps[i]->good())
       {

@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <fstream>
+#include <iostream>
 
 namespace Parser
 {
@@ -26,7 +27,7 @@ namespace Parser
     void add_data_file(const std::string &filename);
     void add_data_files(const std::vector<std::string> &filenames);
 
-    void open_files();
+    void open_files(std::ios_base::openmode op = std::ios_base::in);
 
     void read_files();
   protected:
