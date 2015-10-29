@@ -11,9 +11,14 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules/")
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+# Add SFML library
+find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
+include_directories(${SFML_INCLUDE_DIR})
+
 SET(CMAKE_CXX_FLAGS "-std=c++11")
 
 # define the parser target
-mit_add_example(parser 
+mit_add_example(
+  parser 
   SOURCES ${SRC} 
-  DEPENDS mit-parser)
+  DEPENDS mit-parser ${SFML_LIBRARIES})
