@@ -27,6 +27,12 @@ namespace Parser
 
   Abstract_Parser::~Abstract_Parser()
   {
+    for (unsigned int i = 0; i < _fps.size(); ++i) {
+      if (_fps[i]->is_open())
+      {
+        _fps[i]->close();
+      }
+    }
   }
 
   void Abstract_Parser::add_data_file(const std::string &filename)
