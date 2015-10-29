@@ -95,7 +95,7 @@ macro(mit_add_example target)
     source_group("" FILES ${THIS_SOURCES})
 
     # create the target
-    if(MiT_OS_WINDOWS AND NOT DEFINED CMAKE_CONFIGURATION_TYPES AND ${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    if(MiT_OS_WINDOWS AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
       add_executable(${target} ${THIS_SOURCES})
     endif()
 
