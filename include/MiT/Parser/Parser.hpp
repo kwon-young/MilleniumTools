@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include <fstream>
-#include <Eigen/Dense>
 
 namespace Parser
 {
@@ -29,11 +28,11 @@ namespace Parser
 
     void open_files();
 
-    virtual void read_format() = 0;
+    void read_files();
   protected:
     std::string _data_directory;
     std::vector<std::string> _filenames;
-    std::vector<Eigen::MatrixXd> _datas;
+    
     std::vector<std::shared_ptr<std::fstream> > _fps;
   };
 }

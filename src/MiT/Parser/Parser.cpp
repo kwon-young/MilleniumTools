@@ -8,7 +8,6 @@ namespace Parser
   Abstract_Parser::Abstract_Parser() :
     _data_directory(""),
     _filenames(),
-    _datas(),
     _fps()
   {
   }
@@ -18,13 +17,12 @@ namespace Parser
       const std::vector<std::string> filenames) :
     _data_directory(data_directory),
     _filenames(filenames.begin(), filenames.end()),
-    _datas(),
     _fps()
   {
-    std::cout << "data directory : " << _data_directory << std::endl;
-    for (unsigned int i = 0; i < _filenames.size(); ++i) {
-      std::cout << "file " << i+1 << " : " << _filenames[i] << std::endl;
-    }
+    //std::cout << "data directory : " << _data_directory << std::endl;
+    //for (unsigned int i = 0; i < _filenames.size(); ++i) {
+      //std::cout << "file " << i+1 << " : " << _filenames[i] << std::endl;
+    //}
   }
 
   Abstract_Parser::~Abstract_Parser()

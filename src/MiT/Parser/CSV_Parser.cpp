@@ -1,5 +1,7 @@
 
 #include <MiT/Parser/CSV_Parser.hpp>
+#include <sstream>
+#include <iostream>
 
 namespace Parser
 {
@@ -15,8 +17,5 @@ namespace Parser
 
   CSV_Parser::~CSV_Parser()
   {}
-
-  void CSV_Parser::read_format()
-  {
-  }
 }
+
