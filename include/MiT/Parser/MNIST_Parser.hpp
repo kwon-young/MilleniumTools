@@ -112,11 +112,41 @@ namespace Parser
         f->read((char*)char_data, data_size);
         for (unsigned int i = 0; i < row; i++) {
           for (unsigned int j = 0; j < col; j++) {
-            data.row(i).col(j) << char_data[i*col+j];
+            data.row(i).col(j) << (T)(char_data[i*col+j]);
           }
         }
         delete[] char_data;
       }
+
+      template<typename MatrixXT, typename T>
+      void post_process(
+          const Eigen::Ref<MatrixXT> &in,
+          std::vector<std::vector<uint8_t> > &images,
+          unsigned int img_height,
+          unsigned int img_width,
+          unsigned int nbr_img_load = -1)
+      {
+        assert(img_width*img_height == in.cols());
+        assert(nbr_img_load < in.rows());
+        if (nbr_img_load == -1)
+          nbr_img_load = in.rows();
+        for (unsigned int i = 0; i < nbr_img_load; ++i) {
+          MatrixXT temp(in.row(i));
+          MatrixXT m_img(Eigen::Map<MatrixXT>(
+                temp.data(),
+                img_height,
+                img_width));
+          m_img.transposeInPlace();
+          images.push_back(std::vector<uint8_t>(in.cols()*4, 0));
+          for (unsigned int j = 0; j < in.cols(); ++j) {
+            images[i][j*4]   = *(m_img.row(j/img_width).col(j%img_width).data());
+            images[i][j*4+1] = *(m_img.row(j/img_width).col(j%img_width).data());
+            images[i][j*4+2] = *(m_img.row(j/img_width).col(j%img_width).data());
+            images[i][j*4+3] = 255;
+          }
+        }
+      }
+
     protected:
       /* data */
   };

@@ -13,14 +13,14 @@ int main(int argc, char *argv[])
   std::cout  << std::endl;
   std::string data_directory = "C:/Users/Kwon-Young/Documents/Prog/MilleniumTools/examples/parser/resources/";
   std::vector<std::string> files;
-  std::vector<MatrixXd> datas;
+  std::vector<MatrixXi> datas;
 
   //Testing csv parser
 
   files.push_back("train_data.csv");
   files.push_back("train_label.csv");
   Parser::CSV_Parser myParser(data_directory, files);
-  myParser.read_csv<Eigen::MatrixXd, double>(datas);
+  myParser.read_csv<Eigen::MatrixXi, int>(datas);
   for (unsigned int i = 0; i < datas.size(); ++i) {
     std::cout << datas[i] << std::endl;
   }
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
   datas.clear();
   try
   {
-    mp.read_idx<MatrixXd, double>(datas);
+    mp.read_idx<MatrixXi, int>(datas);
   } catch (const std::exception & e) 
   {
     std::cerr << e.what() << std::endl;
@@ -44,30 +44,28 @@ int main(int argc, char *argv[])
   // opening an sfml windows to show numbers
   
   sf::RenderWindow window(
-      sf::VideoMode(28, 28, 32), "MNIST digit",
+      sf::VideoMode(280, 280, 32), "MNIST digit",
       sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
 
-  int *i_img = new int[datas[0].cols()];
-  for (int i = 0; i < datas[0].cols(); i++) {
-    i_img[i] = (int)*(datas[0].row(0).col(i).data());
-  }
-  Eigen::Map<Eigen::MatrixXi> data(i_img, 28, 28);
-  data.transposeInPlace();
+  std::vector<std::vector<uint8_t> > images;
+  mp.post_process<MatrixXi, int>(datas[0], images, 28, 28, 100);
 
-  sf::Uint8 *img = new sf::Uint8[datas[0].cols()*4];
-  for (unsigned int i = 0; i < datas[0].cols(); i++) {
-    img[i*4]   = (sf::Uint8)*(data.row(i/28).col(i%28).data());
-    img[i*4+1] = (sf::Uint8)*(data.row(i/28).col(i%28).data());
-    img[i*4+2] = (sf::Uint8)*(data.row(i/28).col(i%28).data());
-    img[i*4+3] = 255;
+  //sf::Image img_digit;
+  //img_digit.create(28, 28, images[0].data());
+  //sf::Texture txt_digit;
+  //txt_digit.loadFromImage(img_digit, sf::IntRect(0, 0, 28, 28));
+  //sf::Sprite sp_digit(txt_digit);
+
+  std::vector<sf::Image> imgs_digit(100, sf::Image());
+  std::vector<sf::Texture> txts_digit(100, sf::Texture());
+  std::vector<sf::Sprite> sps_digit;
+  for (unsigned int i = 0; i < images.size(); ++i) {
+    imgs_digit[i].create(28, 28, images[i].data());
+    txts_digit[i].loadFromImage(imgs_digit[i], sf::IntRect(0, 0, 28, 28));
+    sps_digit.push_back(sf::Sprite(txts_digit[i]));
   }
 
-  sf::Image img_digit;
-  img_digit.create(28, 28, img);
-  sf::Texture txt_digit;
-  txt_digit.loadFromImage(img_digit, sf::IntRect(0, 0, 28, 28));
-  sf::Sprite sp_digit(txt_digit);
   while(window.isOpen())
   {
     sf::Event event;
@@ -82,7 +80,17 @@ int main(int argc, char *argv[])
       }
     }
     window.clear(sf::Color(0, 0, 0));
-    window.draw(sp_digit);
+    unsigned int x=0, y=0, inc = 28;
+    for (unsigned int i = 0; i < sps_digit.size(); ++i) {
+      sps_digit[i].setPosition(x, y);
+      window.draw(sps_digit[i]);
+      x+=inc;
+      if (x > window.getSize().x-inc)
+      {
+        x = 0;
+        y += inc;
+      }
+    }
     window.display();
   }
 
